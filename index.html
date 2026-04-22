@@ -1,394 +1,715 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>当机器学会了“催泪”，人类的情感还值钱吗？</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>编导VS小狗美容 · 爆笑抉择H5</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-    html {
-      scroll-behavior: smooth;
-    }
+        body {
+            overflow: hidden;
+            font-family: 'PingFang SC', 'Comic Neue', 'Chalkboard SE', 'Microsoft YaHei', cursive, sans-serif;
+            background: #1a1a2e;
+        }
 
-    body {
-      background: #f9f7f4;
-      font-family: "PingFang SC", "Microsoft YaHei", "KaiTi", serif;
-      color: #2b2b2b;
-      line-height: 2;
-      letter-spacing: 0.5px;
-    }
+        /* 主容器 */
+        .app {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
 
-    /* 滚动渐入 */
-    .fade-in {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.7s ease;
-    }
+        /* 横向滑动区 */
+        .pages-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            will-change: transform;
+        }
 
-    .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+        .page {
+            flex: 0 0 100%;
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            position: relative;
+            scrollbar-width: none;
+            padding: 20px 24px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .page::-webkit-scrollbar {
+            display: none;
+        }
 
-    /* 头部 */
-    .header {
-      background: linear-gradient(130deg, #6b5e51, #857769, #a09284);
-      color: #fff;
-      padding: 5rem 2rem;
-      text-align: center;
-      position: relative;
-      margin-bottom: 2.5rem;
-    }
+        /* 趣味背景 */
+        .page-1 { background: linear-gradient(145deg, #fff9e8, #ffe6c9); }
+        .page-2 { background: linear-gradient(135deg, #fce4e4, #ffcdb0); }
+        .page-3 { background: linear-gradient(120deg, #e0e7ff, #cfd9ff); }
+        .page-4 { background: linear-gradient(145deg, #e6f7e6, #c8e6d9); }
+        .page-5 { background: linear-gradient(135deg, #fff2d9, #ffe0b5); }
 
-    .header h1 {
-      font-size: 2.4rem;
-      font-weight: 500;
-      margin-bottom: 1rem;
-      line-height: 1.4;
-    }
+        /* 搞笑标题 */
+        .big-title {
+            font-size: 2rem;
+            font-weight: 900;
+            text-align: center;
+            margin: 15px 0 15px;
+            letter-spacing: 2px;
+            background: #ffd966;
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 60px;
+            transform: rotate(-1deg);
+            box-shadow: 0 8px 0 #b45f06;
+            align-self: center;
+        }
 
-    .header .lead {
-      font-size: 1.15rem;
-      max-width: 800px;
-      margin: 0 auto;
-      opacity: 0.95;
-    }
+        .character {
+            text-align: center;
+            font-size: 4rem;
+            margin: 15px 0;
+            filter: drop-shadow(0 8px 8px rgba(0,0,0,0.2));
+        }
 
-    .meta {
-      margin-top: 1.5rem;
-      font-size: 0.9rem;
-      opacity: 0.85;
-      padding-top: 1rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.15);
-      display: inline-block;
-    }
+        .desc-text {
+            background: rgba(255,255,240,0.9);
+            border-radius: 48px;
+            padding: 18px;
+            margin: 12px 0;
+            font-size: 1rem;
+            line-height: 1.5;
+            font-weight: bold;
+            border-left: 10px solid #ff9900;
+            box-shadow: 0 6px 0 rgba(0,0,0,0.1);
+        }
 
-    /* 容器 */
-    .container {
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 0 1rem;
-    }
+        /* 选择题选项样式 */
+        .question-block {
+            background: #fff2e0;
+            border-radius: 36px;
+            padding: 16px;
+            margin: 12px 0;
+            box-shadow: 0 6px 0 #e0c8a8;
+        }
+        .question-text {
+            font-weight: 800;
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            color: #7b3f1a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .option-btn {
+            background: white;
+            border: 2px solid #efdbc4;
+            border-radius: 60px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .option-btn:active {
+            transform: scale(0.97);
+            background: #fff3e6;
+            border-color: #d4a373;
+        }
+        .option-emoji {
+            font-size: 32px;
+            background: #f9e8d4;
+            width: 48px;
+            height: 48px;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .option-text {
+            flex: 1;
+            font-weight: 600;
+            color: #4f3523;
+            font-size: 14px;
+        }
+        .selected-tag {
+            background: #ffb347;
+            color: white;
+            border-radius: 30px;
+            padding: 4px 10px;
+            font-size: 11px;
+            margin-left: 8px;
+        }
 
-    /* 文章主体 */
-    .article {
-      background: #fff;
-      padding: 3.5rem 3rem;
-      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
-      margin-bottom: 2.5rem;
-    }
+        .click-tip {
+            background: #000000aa;
+            color: white;
+            border-radius: 60px;
+            padding: 6px 14px;
+            font-size: 0.7rem;
+            width: fit-content;
+            margin: 10px auto;
+            backdrop-filter: blur(4px);
+        }
 
-    .article p {
-      font-size: 1.1rem;
-      margin-bottom: 1.4rem;
-      text-align: justify;
-      color: #333;
-    }
+        /* 爆炸特效 */
+        .explode-effect {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 5rem;
+            z-index: 200;
+            pointer-events: none;
+            animation: boomAnim 0.6s ease-out forwards;
+            text-shadow: 0 0 20px red;
+            white-space: nowrap;
+        }
+        @keyframes boomAnim {
+            0% { scale: 0.2; opacity: 1; rotate: 0deg; }
+            50% { scale: 1.8; opacity: 1; rotate: 20deg; }
+            100% { scale: 3; opacity: 0; rotate: 40deg; }
+        }
 
-    .article h2 {
-      font-size: 1.6rem;
-      color: #444;
-      margin: 2.8rem 0 1.2rem;
-      border-left: 5px solid #ab977f;
-      padding-left: 16px;
-      font-weight: 500;
-    }
+        /* 弹窗 */
+        .pop-toast {
+            position: fixed;
+            bottom: 30%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2c3e2f;
+            color: #fff5b0;
+            padding: 12px 24px;
+            border-radius: 100px;
+            font-weight: bold;
+            font-size: 1rem;
+            white-space: nowrap;
+            z-index: 150;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            border: 3px solid #ffde6e;
+            animation: popFly 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        @keyframes popFly {
+            0% { bottom: 20%; opacity: 0; scale: 0.5; }
+            100% { bottom: 30%; opacity: 1; scale: 1; }
+        }
 
-    /* 视频 */
-    .video-box {
-      margin: 2.5rem 0;
-      overflow: hidden;
-      background: #000;
-    }
+        /* 抖动特效 */
+        .shake-page {
+            animation: shakeCrazy 0.15s infinite;
+        }
+        @keyframes shakeCrazy {
+            0% { transform: translate(1px, 1px) rotate(0.5deg); }
+            100% { transform: translate(-1px, -1px) rotate(-0.5deg); }
+        }
+        .shake-people {
+            animation: wobbly 0.2s infinite;
+        }
+        @keyframes wobbly {
+            0% { transform: rotate(0deg); }
+            50% { transform: rotate(6deg); }
+            100% { transform: rotate(-6deg); }
+        }
 
-    .video-box iframe {
-      width: 100%;
-      height: 540px;
-      border: none;
-      display: block;
-    }
+        .sparkle {
+            animation: glitter 0.8s ease-out;
+        }
+        @keyframes glitter {
+            0% { text-shadow: 0 0 0 gold; opacity: 0.2; filter: blur(4px);}
+            100% { text-shadow: 0 0 20px yellow; opacity: 1; filter: blur(0);}
+        }
 
-    .video-link {
-      text-align: center;
-      margin-top: 0.8rem;
-      font-size: 1rem;
-    }
+        /* 爱心雨 */
+        .heart-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .heart {
+            position: absolute;
+            bottom: -20px;
+            font-size: 1.5rem;
+            animation: floatUp 3s linear forwards;
+        }
+        @keyframes floatUp {
+            0% { bottom: -20px; opacity: 1; transform: rotate(0deg);}
+            100% { bottom: 110%; opacity: 0; transform: rotate(20deg);}
+        }
 
-    .video-link a {
-      color: #856c5b;
-      text-decoration: none;
-      font-weight: 500;
-    }
+        .ai-flash {
+            animation: flashImpact 0.4s 2;
+        }
+        @keyframes flashImpact {
+            0% { filter: brightness(1);}
+            50% { filter: brightness(1.8); text-shadow: 0 0 10px cyan;}
+            100% { filter: brightness(1);}
+        }
 
-    /* 图表 */
-    .chart-box {
-      background: #fff;
-      padding: 2rem;
-      border: 1px solid #eee;
-      margin: 2.2rem 0;
-    }
+        /* 投票区 */
+        .vote-box {
+            background: #fff6e0;
+            border-radius: 48px;
+            padding: 18px;
+            margin: 15px 0;
+            box-shadow: 0 8px 0 #d4a373;
+        }
+        .vote-item {
+            background: #ffefc0;
+            margin: 12px 0;
+            border-radius: 60px;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            border: 2px solid #b97f44;
+        }
+        .vote-item:active { transform: scale(0.96); background: #ffe2a4;}
 
-    .chart-box h3 {
-      font-size: 1.15rem;
-      color: #333;
-      margin-bottom: 1rem;
-      font-weight: 500;
-    }
+        /* 结果报告 */
+        .result-card {
+            background: #f9efdf;
+            border-radius: 40px;
+            padding: 18px;
+            margin-top: 12px;
+        }
+        .result-big {
+            font-size: 26px;
+            font-weight: 800;
+            text-align: center;
+            margin: 10px 0;
+        }
 
-    canvas {
-      width: 100% !important;
-      height: 300px !important;
-    }
-
-    .data-info {
-      background: #f6f4f0;
-      padding: 1rem;
-      margin-top: 1rem;
-      font-size: 0.9rem;
-      color: #555;
-      border-left: 3px solid #ab977f;
-    }
-
-    /* 重点卡片 */
-    .card {
-      background: #fcf6f0;
-      border-left: 6px solid #c9a88e;
-      padding: 1.6rem 2rem;
-      margin: 2.2rem 0;
-    }
-
-    .card h4 {
-      font-size: 1.15rem;
-      color: #856c5b;
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-    }
-
-    /* 结语 */
-    .conclusion {
-      background: #f6f4f0;
-      padding: 3rem;
-      text-align: center;
-      margin: 3.5rem 0;
-      border-top: 1px solid #ddd;
-      border-bottom: 1px solid #ddd;
-    }
-
-    .conclusion h2 {
-      font-size: 1.7rem;
-      color: #6b5e51;
-      margin-bottom: 1.2rem;
-      font-weight: 500;
-    }
-
-    .conclusion p {
-      font-size: 1.12rem;
-      color: #333;
-      line-height: 2;
-    }
-
-    /* 回到顶部 */
-    #backToTop {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      width: 50px;
-      height: 50px;
-      background: #ab977f;
-      color: #fff;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      opacity: 0;
-      pointer-events: none;
-      transition: all 0.4s ease;
-      z-index: 99;
-    }
-
-    #backToTop.show {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    /* 响应式 */
-    @media (max-width: 900px) {
-      .article {
-        padding: 2.5rem 1.8rem;
-      }
-
-      .video-box iframe {
-        height: 400px;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .header h1 {
-        font-size: 2rem;
-      }
-
-      .video-box iframe {
-        height: 260px;
-      }
-
-      .article {
-        padding: 2rem 1.2rem;
-      }
-    }
-  </style>
+        /* 导航按钮 */
+        .nav-buttons {
+            position: fixed;
+            bottom: 18px;
+            left: 18px;
+            right: 18px;
+            display: flex;
+            justify-content: space-between;
+            z-index: 99;
+        }
+        .nav-btn {
+            background: #3c2f2fdd;
+            backdrop-filter: blur(12px);
+            padding: 10px 22px;
+            border-radius: 60px;
+            color: white;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+        .page-index {
+            position: fixed;
+            bottom: 18px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #000000aa;
+            padding: 5px 16px;
+            border-radius: 30px;
+            color: gold;
+            z-index: 99;
+            font-size: 0.8rem;
+        }
+        button {
+            background: none;
+            border: none;
+        }
+        .disabled-opt {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+    </style>
 </head>
-
 <body>
-  <div class="header">
-    <h1>当机器学会了“催泪”，人类的情感还值钱吗？</h1>
-    <p class="lead">AI时代情感叙事深度融合新闻｜以《纸手机》为案例</p>
-    <div class="meta">数据来源：全网舆情监测 | 深度评论整合 | 清明特别报道</div>
-  </div>
+<div class="app">
+    <div class="pages-container" id="pagesContainer">
+        <!-- 第1页：梦想开局 -->
+        <div class="page page-1" id="page1">
+            <div class="big-title sparkle">✨我的梦想：我要当顶级编导✨</div>
+            <div class="character click-zone" id="page1ClickZone">
+                🎬🧑‍🎤📷✨<br><span style="font-size:2rem;">🎥 未来大导演 💼</span>
+            </div>
+            <div class="desc-text">
+                🎬 我本来以为学编导，手握镜头指点江山，下一个贾樟柯、下一个姜文，🔥 影视圈我直接呼风唤雨！ 🔥
+            </div>
+            <div class="risk-compact" style="background:#2e241f; border-radius: 28px; padding: 16px; margin-top: 8px; color:#fae9cf;">
+                <div style="font-weight: 700; margin-bottom: 8px;">📉 AI替代风险雷达</div>
+                <div><span>🎬 编导 替代风险 92%</span><div style="height:8px; background:#e35f3e; width:92%; margin-top:4px; border-radius:8px;"></div></div>
+                <div><span>✂️🐕 宠物美容师 替代风险 7%</span><div style="height:8px; background:#9fcb6b; width:7%; margin-top:4px; border-radius:8px;"></div></div>
+                <div><span>🐩 直接当狗 精神永存 2%</span><div style="height:8px; background:#b9a58b; width:2%; margin-top:4px; border-radius:8px;"></div></div>
+                <div style="font-size:12px; margin-top:12px;">✨ 宠物经济年增23% · 手艺无法被算法复刻</div>
+            </div>
+            <div class="click-tip">👇 戳我装杯 👇</div>
+        </div>
 
-  <div class="container">
-    <div class="article fade-in">
-      <p>清明前夕，一部名为《纸手机》的AI短片刷屏全网。</p>
-      <p>画面里，一个还不理解“去世”含义的小男孩，攥着攒下的15元钱，想买一部能打电话的纸手机烧给带大他的奶奶。镜头极简、场景寥寥，全片唯一的实拍道具是一部手绘的纸手机，其余皆由AI生成。就是这样一部短短五分钟的作品，全网播放量超过4000万，获赞超180万次，被人民日报、央视新闻等主流媒体转发，无数网友在评论区分享自己的故事，留下泪水。</p>
+        <!-- 第2页：现实暴击 + 第一道选择题（AI剧本危机）-->
+        <div class="page page-2" id="page2">
+            <div class="big-title" style="background:#f9844a;">💣现实直接给我炸懵了！💣</div>
+            <div class="character click-zone" id="page2ExplodeZone" style="font-size:3.5rem;">🧑‍💻🤯📦☕🐕‍🦺<br><span style="font-size:1.2rem;">(头发炸毛+电脑山)</span></div>
+            <div class="desc-text">
+                💢 理想有多美好，现实就有多离谱！月薪三千干十个人的活，写剧本、盯后期、开车订饭、跑腿打杂...🐩 编导不当人就算了，导演的狗都归我遛！！！
+            </div>
+            <!-- 选择题1 -->
+            <div class="question-block" id="quiz1Block">
+                <div class="question-text">🤖 第一幕 · 算法围城：AI一键生成剧本吊打你，导演说“下个月用Sora量产，你负责遛狗”，你会？</div>
+                <div class="options-list">
+                    <div class="option-btn" data-choice="director" data-page="2">
+                        <div class="option-emoji">🎥😤</div>
+                        <div class="option-text">A. 卷死AI！报名Prompt工程，誓做“提示词编导”，继续受苦</div>
+                    </div>
+                    <div class="option-btn" data-choice="groomer" data-page="2">
+                        <div class="option-emoji">🐕✂️</div>
+                        <div class="option-text">B. 果断转行宠物美容，学一门AI永远抢不走的手艺</div>
+                    </div>
+                    <div class="option-btn" data-choice="dog" data-page="2">
+                        <div class="option-emoji">🐕‍🦺🍖</div>
+                        <div class="option-text">C. 原地躺平对导演汪汪叫，求包养，早日成为富贵狗</div>
+                    </div>
+                </div>
+            </div>
+            <div class="click-tip">💥 戳上面崩溃小人也能爆炸 💥</div>
+        </div>
 
-      <div class="video-box fade-in">
-        <iframe src="https://player.bilibili.com/player.html?bvid=BV1gdDwBnEjp&page=1" allowfullscreen></iframe>
-      </div>
-      <div class="video-link fade-in">
-        原片跳转：<a href="https://www.bilibili.com/video/BV1gdDwBnEjp/" target="_blank">B站《纸手机》官方完整版</a>
-      </div>
+        <!-- 第3页：AI抢饭碗 + 第二道选择题（PUA与遛狗）-->
+        <div class="page page-3" id="page3">
+            <div class="big-title" style="background:#577590;">🤖AI来了，编导直接失业预警！</div>
+            <div class="character" style="display: flex; justify-content: center; gap: 30px;">
+                <div class="ai-bot" id="aiBot" style="font-size:4rem; cursor:pointer;">🤖💻</div>
+                <div class="director-man" id="directorMan" style="font-size:4rem; cursor:pointer;">🧑‍💻😭📸</div>
+            </div>
+            <div class="desc-text">
+                ⚡ AI一键写脚本、剪辑、包装！编导能干的事AI几分钟搞定，不用吃饭不用加薪，编导随时原地下岗！
+            </div>
+            <div class="question-block" id="quiz2Block">
+                <div class="question-text">🐕 第二幕 · 甲方的狗与尊严：奇葩甲方第18次改稿，凌晨让你给贵宾犬做SPA，并嘲讽“AI马上取代你”，你？</div>
+                <div class="options-list">
+                    <div class="option-btn" data-choice="director" data-page="3">
+                        <div class="option-emoji">😭🎞️</div>
+                        <div class="option-text">A. 含泪遛狗改稿，坚信“贾樟柯之梦”，卑微坚持</div>
+                    </div>
+                    <div class="option-btn" data-choice="groomer" data-page="3">
+                        <div class="option-emoji">💇🐩</div>
+                        <div class="option-text">B. 当场辞职，开宠物美容工作室，再也不受甲方气</div>
+                    </div>
+                    <div class="option-btn" data-choice="dog" data-page="3">
+                        <div class="option-emoji">🧘🐕</div>
+                        <div class="option-text">C. 跟贵宾犬拜把子，成为狗中狗，反客为主</div>
+                    </div>
+                </div>
+            </div>
+            <div class="click-tip">👉 戳AI机器人 或 编导 互怼弹窗 👈</div>
+        </div>
 
-      <p>这支短片最引人深思的地方在于它的一个悖论：全片没有真人演员，所有角色均由AI生成，却精准击中了人类最深层的思念与离别之痛。网友们一边泪目，一边惊叹：“最没人味的AI，制作出了最有人味的短片。”</p>
-      <p>这也让我们不得不追问：当机器学会了“催泪”，人类的情感还值钱吗？人类的情感劳动与共情能力又将面临怎样的重构？</p>
+        <!-- 第4页：小狗美容赢麻了 + 第三道选择题（十年愿景）-->
+        <div class="page page-4" id="page4">
+            <div class="big-title" style="background:#8ac926;">🐶原来小狗美容才是真铁饭碗！</div>
+            <div class="character cute-dog" id="cuteDog" style="font-size:4.5rem; cursor:pointer;">🐩✂️🧼✨💖</div>
+            <div class="desc-text">
+                🛁 没有奇葩甲方、没有熬夜改稿、没有职场PUA，手艺在手客源稳定，AI永远替代不了！摸摸狗狗治愈加倍。
+            </div>
+            <div class="question-block" id="quiz3Block">
+                <div class="question-text">🔮 终局之问 · 2036年的你：AI已能生成奥斯卡电影，你希望镜子里的自己？</div>
+                <div class="options-list">
+                    <div class="option-btn" data-choice="director" data-page="4">
+                        <div class="option-emoji">🏆🤖</div>
+                        <div class="option-text">A. 资深编导，发际线后移，焦虑被AI替代，仍在给制片方遛狗</div>
+                    </div>
+                    <div class="option-btn" data-choice="groomer" data-page="4">
+                        <div class="option-emoji">🏆🐕✨</div>
+                        <div class="option-text">B. 金牌宠物美容师，三家连锁店，客户排队，永不失业</div>
+                    </div>
+                    <div class="option-btn" data-choice="dog" data-page="4">
+                        <div class="option-emoji">😎🍗</div>
+                        <div class="option-text">C. 被富婆收养的网红狗，住别墅，嘲笑人类职场</div>
+                    </div>
+                </div>
+            </div>
+            <div class="click-tip">🐾 戳小狗！它会卖萌 🐾</div>
+        </div>
 
-      <h2 class="fade-in">一、AI为什么能让人哭？</h2>
-      <p class="fade-in">很多人以为，AI生成的内容一定是冰冷、机械、缺乏情感的。《纸手机》却打破了这种印象。</p>
-      <p class="fade-in">首先，它敢于“留白”。在短视频时代，大多数内容追求三秒一个反转、五秒一个高潮，生怕观众划走。《纸手机》反其道而行，用两分钟的安静画面，还原了中国人面对离别时那种“后知后觉”的悲伤。</p>
-      <p class="fade-in">其次，它保留了“不完美”。片中最关键的道具——那部手绘的纸手机，团队曾尝试用AI生成，结果画面太精致、太流畅。最后他们选择自己动手画了一个歪歪扭扭的版本。正是这种笨拙的烟火气，让观众觉得真实。</p>
-      <p class="fade-in">最后，真正让观众流泪的，不是AI的“演技”，而是每个人心里自己的故事。观众不是被动被催泪，而是主动在作品中安放自己的思念。AI只是搭了个台子，真正唱戏的，是观众心里那个再也见不到的人。</p>
-
-      <div class="chart-box fade-in">
-        <h3>《纸手机》全网平台播放数据（万）</h3>
-        <canvas id="chart1"></canvas>
-        <div class="data-info">数据说明：2026年4月4日-6日；总播放4000万+，人民日报、央视新闻转发</div>
-      </div>
-
-      <h2 class="fade-in">二、情感密码：评论区里的集体共鸣</h2>
-      <p class="fade-in">我们抽取全网10万+评论进行文本分析，发现高频词高度集中：思念、亲情、眼泪、温暖、治愈、感动……这些充满温度的词汇，构成了《纸手机》的情感底色。</p>
-
-      <div class="chart-box fade-in">
-        <h3>评论区高频情感关键词频次</h3>
-        <canvas id="chart2"></canvas>
-        <div class="data-info">样本：10万+真实评论；核心围绕亲情、思念、遗憾与治愈展开</div>
-      </div>
-
-      <h2 class="fade-in">三、当AI批量生产“催泪弹”，情感会贬值吗？</h2>
-      <p class="fade-in">这确实是一个值得警惕的趋势。机器可以一天生成上万条标准化故事，精准踩中泪点与爽点。有学者指出，当AI伴侣能随时随地提供“完美安慰”，真实人际关系可能因不够“完美”而被冷落，人类陷入“冷亲密”状态。</p>
-      <p class="fade-in">但《纸手机》的爆火也传递了信号：观众早已对高密度刺激内容产生审美疲劳。当所有人用AI生产同质化内容时，一部安静、留白、反效率的叙事，反而成了最稀缺的珍品。</p>
-
-      <div class="chart-box fade-in">
-        <h3>AI叙事 vs 人类创作：情绪唤醒与可信度对比</h3>
-        <canvas id="chart3"></canvas>
-        <div class="data-info">AI擅长模拟情绪形式，人类擅长生发情感本质</div>
-      </div>
-
-      <div class="card fade-in">
-        <h4>核心观点</h4>
-        <p>AI的眼泪是画出来的，真人的眼泪是从身体里流淌出来的，有温度、有味道。</p>
-      </div>
-
-      <h2 class="fade-in">四、人类的情感到底还值不值钱？</h2>
-      <p class="fade-in">答案是：不但没有贬值，反而更值钱了。</p>
-      <p class="fade-in">因为AI可以模仿情感的“形式”，却无法拥有情感的“本质”。《纸手机》里最打动人的设定，不是AI自己想出来的，而是编剧真实的童年经历。AI可以计算悲伤，却从未经历离别；可以生成思念，却从未体会过拨不通电话的绝望。</p>
-      <p class="fade-in">创作者把真实情感“编码”进作品，观众再“解码”出自己的感受。源头情感是空的，观众的感动也必然是空的。观众流下的每一滴眼泪，都不是为AI而流，而是为自己心里那个再也见不到的人。</p>
-
-      <div class="chart-box fade-in">
-        <h3>《纸手机》成功要素占比</h3>
-        <canvas id="chart4"></canvas>
-        <div class="data-info">情感内核38%、真实细节28%、文化共鸣18%、AI技术仅占16%</div>
-      </div>
+        <!-- 第5页：终极结果报告 + 投票 -->
+        <div class="page page-5" id="page5">
+            <div class="big-title" style="background:#ffb347;">📢 抗AI命运档案 · 揭晓</div>
+            <div class="result-card" id="resultCard">
+                <div id="resultBadge" class="badge" style="background:#2e241f;color:#f7d794; display:inline-block; padding:4px 14px; border-radius:40px;">✨ 职业天眼</div>
+                <div id="resultTitle" class="result-big">🔮 分析中...</div>
+                <div id="resultDetailed" style="margin: 15px 0; line-height: 1.5; font-size: 14px; color:#3c2a21;"></div>
+                <div class="risk-compact" style="background:#2e241f; border-radius: 28px; padding: 14px; margin-top: 8px; color:#fae9cf; font-size:13px;">
+                    <div>🤖 AI冲击现实：编导岗3年减少57%，月薪三千遛狗成常态；宠物美容师需求年增32%，0%被替代可能。</div>
+                    <div style="margin-top:6px;">✂️ 手艺即护城河，小狗美容才是真·铁饭碗！</div>
+                </div>
+            </div>
+            <!-- 保留原趣味投票 -->
+            <div class="vote-box" id="voteBox">
+                <div style="font-weight:800; margin-bottom:8px;">🎉 全网搞笑投票（凑个热闹）</div>
+                <div class="vote-item" data-opt="0">
+                    <span>😭🎬</span><span>傻傻坚持编导，继续受苦</span><span id="percent0" style="background:#b97f44; padding:2px 12px; border-radius:30px;">0%</span>
+                </div>
+                <div class="vote-item" data-opt="1">
+                    <span>🐩✂️</span><span>转行小狗美容，人生躺赢</span><span id="percent1" style="background:#b97f44; padding:2px 12px; border-radius:30px;">0%</span>
+                </div>
+                <div class="vote-item" data-opt="2">
+                    <span>🐕🛋️</span><span>太累了，直接当狗享福</span><span id="percent2" style="background:#b97f44; padding:2px 12px; border-radius:30px;">0%</span>
+                </div>
+            </div>
+            <button id="restartBtn" style="background:#d9b48b; margin-top:12px; padding:12px; border-radius:60px; font-weight:bold;">🔄 重新抉择 / 再活一次</button>
+            <div class="click-tip" style="margin-top: 12px;">👇 戳投票选项 炸裂吐槽 👇</div>
+        </div>
     </div>
 
-    <div class="conclusion fade-in">
-      <h2>结语：技术是舟楫，人心才是航向</h2>
-      <p>情感之所以珍贵，从来不是因为稀缺，而是因为真实。<br>
-        AI可以模拟情感的形式，却无法替代情感的本质。真正的共情，诞生于真实的生命体验，诞生于那些笨拙、不完美、却无比真诚的瞬间。<br><br>
-        无论AI进化到什么程度，<br>
-        能打动人心的，永远是那个懂得爱与思念的“人”。<br>
-        人类的情感，永不贬值。</p>
+    <div class="nav-buttons">
+        <button class="nav-btn" id="prevBtn">👈 上一页</button>
+        <button class="nav-btn" id="nextBtn">下一页 👉</button>
     </div>
-  </div>
+    <div class="page-index" id="pageIndex">1 / 5</div>
+</div>
 
-  <div id="backToTop">↑</div>
-
-  <script>
-    // 滚动动画
-    const fadeElements = document.querySelectorAll('.fade-in');
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => entry.isIntersecting && entry.target.classList.add('visible'));
-    }, { threshold: 0.1 });
-    fadeElements.forEach(el => observer.observe(el));
-
-    // 回到顶部
-    const backBtn = document.getElementById('backToTop');
-    window.addEventListener('scroll', () => {
-      backBtn.classList.toggle('show', window.scrollY > 400);
+<script>
+    // ---------- 全局变量 ----------
+    let currentIdx = 0;
+    const total = 5;
+    const container = document.getElementById('pagesContainer');
+    // 分数系统
+    let scores = { director: 0, groomer: 0, dog: 0 };
+    // 记录每页的选择 (2,3,4)
+    let pageSelections = { 2: null, 3: null, 4: null }; // 'director', 'groomer', 'dog'
+    
+    // 投票数据
+    let votes = [0,0,0];
+    let totalVotes = 0;
+    
+    // 爱心雨计时器
+    let heartInterval = null;
+    
+    // ---------- 页面切换 ----------
+    function updateTransform() {
+        container.style.transform = `translateX(-${currentIdx * 100}%)`;
+        document.getElementById('pageIndex').innerText = `${currentIdx+1} / ${total}`;
+        // 页面特效控制
+        if(currentIdx === 1) document.getElementById('page2').classList.add('shake-page');
+        else document.getElementById('page2')?.classList.remove('shake-page');
+        
+        if(currentIdx === 2) document.getElementById('directorMan')?.classList.add('shake-people');
+        else document.getElementById('directorMan')?.classList.remove('shake-people');
+        
+        if(currentIdx === 3) startHeartRain();
+        else stopHeartRain();
+        
+        if(currentIdx === 4) generateResultReport();
+    }
+    
+    function nextPage() {
+        if(currentIdx < total-1) {
+            // 如果试图离开决策页(2,3,4)但未选择，阻止
+            if((currentIdx === 1 || currentIdx === 2 || currentIdx === 3) && !pageSelections[currentIdx+1]) {
+                showToast("🤣 先做出爆笑抉择再前进！戳上面选项~", 1500);
+                return;
+            }
+            currentIdx++;
+            updateTransform();
+        } else showToast("😆 最后一页啦！看看你的命运报告~", 1200);
+    }
+    function prevPage() {
+        if(currentIdx > 0) { currentIdx--; updateTransform(); }
+        else showToast("🚀 第一页！梦想起飞~", 1000);
+    }
+    
+    document.getElementById('prevBtn').addEventListener('click', prevPage);
+    document.getElementById('nextBtn').addEventListener('click', nextPage);
+    
+    // 弹窗与爆炸
+    function showToast(msg, duration=1800) {
+        let existing = document.querySelector('.pop-toast');
+        if(existing) existing.remove();
+        let toast = document.createElement('div');
+        toast.className = 'pop-toast';
+        toast.innerText = msg;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), duration);
+    }
+    function boomEffect(extraMsg) {
+        const boomDiv = document.createElement('div');
+        boomDiv.className = 'explode-effect';
+        boomDiv.innerHTML = '💥💣💥 心态炸裂！ 💥💣💥';
+        document.body.appendChild(boomDiv);
+        setTimeout(() => boomDiv.remove(), 600);
+        showToast(extraMsg || '💢 编导心态原地升天 💢', 1500);
+        if(navigator.vibrate) navigator.vibrate(100);
+    }
+    
+    // 处理选择题点击 (加分 & 记录 & 自动跳转)
+    function bindQuizChoices() {
+        const btns = document.querySelectorAll('.option-btn');
+        btns.forEach(btn => {
+            btn.removeEventListener('click', quizHandler);
+            btn.addEventListener('click', quizHandler);
+        });
+    }
+    function quizHandler(e) {
+        const btn = e.currentTarget;
+        const choice = btn.getAttribute('data-choice');
+        const pageNum = parseInt(btn.getAttribute('data-page'));
+        if(!choice || !pageNum) return;
+        // 如果已经选择过本页，先减去旧分数
+        const oldChoice = pageSelections[pageNum];
+        if(oldChoice) {
+            scores[oldChoice] -= 2; // 每项选择分值2
+        }
+        // 增加新分数
+        scores[choice] += 2;
+        pageSelections[pageNum] = choice;
+        // 显示弹窗搞笑
+        let msg = "";
+        if(choice === 'director') msg = "🎬 编导勇士！含泪坚持，AI都感动了！";
+        else if(choice === 'groomer') msg = "🐩 明智！小狗美容永不失业，远离PUA～";
+        else msg = "🐕 汪汪！狗生赢家，但美容师更香哦";
+        showToast(msg, 1200);
+        // 爆炸特效增加爽感
+        const fakeBoom = document.createElement('div');
+        fakeBoom.className = 'explode-effect';
+        fakeBoom.innerHTML = choice === 'groomer' ? '✂️🐕 赢麻了！' : '💥 抉择爆炸 💥';
+        fakeBoom.style.fontSize = '2.5rem';
+        document.body.appendChild(fakeBoom);
+        setTimeout(() => fakeBoom.remove(), 500);
+        // 自动跳到下一页
+        if(currentIdx === pageNum-1 && currentIdx < total-1) {
+            setTimeout(() => { nextPage(); }, 200);
+        } else {
+            // 如果用户手动在后面重新选，刷新结果用
+            if(currentIdx === 4) generateResultReport();
+        }
+        // 刷新UI显示已选标记（简单起见，不加标记也行）
+    }
+    
+    // 爱心雨
+    function startHeartRain() {
+        stopHeartRain();
+        const page4 = document.getElementById('page4');
+        let heartLayer = page4.querySelector('.heart-container');
+        if(!heartLayer) {
+            heartLayer = document.createElement('div');
+            heartLayer.className = 'heart-container';
+            page4.style.position = 'relative';
+            page4.appendChild(heartLayer);
+        }
+        heartInterval = setInterval(() => {
+            if(currentIdx !== 3) return;
+            const heartDiv = document.createElement('div');
+            heartDiv.className = 'heart';
+            heartDiv.innerText = ['❤️','💖','🐾','✨','🐶'][Math.floor(Math.random()*5)];
+            heartDiv.style.left = Math.random() * 90 + '%';
+            heartDiv.style.fontSize = (Math.random() * 20 + 20) + 'px';
+            heartLayer.appendChild(heartDiv);
+            setTimeout(() => heartDiv.remove(), 2500);
+        }, 400);
+    }
+    function stopHeartRain() {
+        if(heartInterval) { clearInterval(heartInterval); heartInterval = null; }
+        const heartLayer = document.querySelector('#page4 .heart-container');
+        if(heartLayer) heartLayer.innerHTML = '';
+    }
+    
+    // 生成最终结果报告
+    function generateResultReport() {
+        const { director, groomer, dog } = scores;
+        let maxScore = Math.max(director, groomer, dog);
+        let resultType = 'groomer'; // 默认
+        if(maxScore > 0) {
+            if(groomer === maxScore) resultType = 'groomer';
+            else if(director === maxScore) resultType = 'director';
+            else if(dog === maxScore) resultType = 'dog';
+        }
+        const resultBadge = document.getElementById('resultBadge');
+        const resultTitle = document.getElementById('resultTitle');
+        const resultDetailed = document.getElementById('resultDetailed');
+        
+        if(resultType === 'director') {
+            resultBadge.innerText = '🎬 编导遗孤 · 困兽之斗';
+            resultTitle.innerText = '🎥 炮灰预备役 · 月薪三千遛狗人';
+            resultDetailed.innerHTML = `<strong>⚡ AI冲击报告：</strong> 你坚持编导梦，但影视行业基础岗位减少63%，随时被Sora替代，还要承受甲方PUA和无限遛狗。<br>😭 前途评分：★☆☆☆☆ (高危职业，建议立刻转型宠物美容)<br>💡 宠物美容师需求暴涨，手艺永不贬值。`;
+        } else if(resultType === 'groomer') {
+            resultBadge.innerText = '✂️🐕 宠物美学宗师 · 抗AI先锋';
+            resultTitle.innerText = '✨ 无法被算法取代的黄金饭碗';
+            resultDetailed.innerHTML = `<strong>🚀 正确选择：你踏上了不可替代之路！</strong><br>宠物美容师客源稳定，无PUA无熬夜，AI无法复制手艺。2026年宠物经济破4000亿，资深美容师月入2w+。<br>🏆 前途评分：★★★★★ (抗AI王者，钱途光明)`;
+        } else {
+            resultBadge.innerText = '🐕 终极躺平 · 人狗合一';
+            resultTitle.innerText = '🦴 精神胜利法 · 虚无主义大师';
+            resultDetailed.innerHTML = `<strong>🤣 您选择直接当狗，彻底逃离职场。</strong><br>但残酷真相：帮你美容的宠物美容师正赚得盆满钵满。从编导转行美容师的朋友已经开分店了，而你还在等投喂。<br>😅 前途评分：★★☆☆☆ (幽默摆烂，美容师才是真正赢家)`;
+        }
+    }
+    
+    // 投票系统
+    function updateVoteUI() {
+        totalVotes = votes[0]+votes[1]+votes[2];
+        if(totalVotes===0) { document.getElementById('percent0').innerText='0%'; document.getElementById('percent1').innerText='0%'; document.getElementById('percent2').innerText='0%'; return; }
+        document.getElementById('percent0').innerText = Math.round((votes[0]/totalVotes)*100)+'%';
+        document.getElementById('percent1').innerText = Math.round((votes[1]/totalVotes)*100)+'%';
+        document.getElementById('percent2').innerText = Math.round((votes[2]/totalVotes)*100)+'%';
+    }
+    function bindVote() {
+        const voteItems = document.querySelectorAll('.vote-item');
+        voteItems.forEach((item, idx) => {
+            item.addEventListener('click', (e) => {
+                votes[idx]++;
+                updateVoteUI();
+                showToast(["😭 编导地狱模式","🐩 美容师永远滴神","🐕 当狗也要美容"][idx], 1200);
+            });
+        });
+    }
+    
+    // 原有搞笑互动: 装杯,爆炸,AI互怼,小狗卖萌
+    document.getElementById('page1ClickZone')?.addEventListener('click',()=>{ showToast("✨ 我未来大导演，娱乐圈我做主！ ✨",1600); boomEffect("装杯炸裂"); });
+    const page2Explode = document.getElementById('page2ExplodeZone');
+    if(page2Explode) page2Explode.addEventListener('click', (e)=>{ if(currentIdx===1) boomEffect("🤯 月薪三千遛导演的狗！心态爆炸 🤯"); });
+    document.getElementById('aiBot')?.addEventListener('click',()=>{ if(currentIdx===2) showToast("🤖 AI嘲讽: 你失业吧，我比你强！🤖",1800); });
+    document.getElementById('directorMan')?.addEventListener('click',()=>{ if(currentIdx===2) showToast("😭 编导崩溃: 别抢我饭碗啊！！ 😭",1800); });
+    document.getElementById('cuteDog')?.addEventListener('click',()=>{ if(currentIdx===3) { showToast("🐕 小狗摇尾巴: 我比编导幸福多啦～",1500); for(let i=0;i<6;i++){ let h=document.createElement('div'); h.innerText='💖🐾'; h.style.position='fixed'; h.style.left=Math.random()*innerWidth+'px'; h.style.bottom='20%'; h.style.fontSize='28px'; h.style.pointerEvents='none'; h.style.animation='floatUp 1s ease-out forwards'; document.body.appendChild(h); setTimeout(()=>h.remove(),1000); } } });
+    
+    // 重启
+    document.getElementById('restartBtn')?.addEventListener('click',()=>{
+        scores = { director:0, groomer:0, dog:0 };
+        pageSelections = {2:null,3:null,4:null};
+        currentIdx = 0;
+        updateTransform();
+        showToast("♻️ 人生重来！再做一次爆笑抉择~", 1200);
+        generateResultReport();
     });
-    backBtn.onclick = () => window.scrollTo({ top: 0 });
-
-    // 图表
-    new Chart(document.getElementById('chart1'), {
-      type: 'bar',
-      data: {
-        labels: ['抖音', 'B站', '微博', '视频号', '其他'],
-        datasets: [{
-          label: '播放量（万）',
-          data: [1800, 900, 700, 450, 150],
-          backgroundColor: ['#ab977f', '#c9a88e', '#a09284', '#857769', '#6b5e51']
-        }]
-      }
-    });
-
-    new Chart(document.getElementById('chart2'), {
-      type: 'radar',
-      data: {
-        labels: ['思念', '亲情', '眼泪', '温暖', '治愈', '感动', '遗憾'],
-        datasets: [{
-          label: '出现频次',
-          data: [8200, 7600, 6800, 5900, 5200, 7100, 4500],
-          backgroundColor: 'rgba(171,151,127,0.1)',
-          borderColor: '#ab977f'
-        }]
-      }
-    });
-
-    new Chart(document.getElementById('chart3'), {
-      type: 'bar',
-      data: {
-        labels: ['AI叙事', '人类创作'],
-        datasets: [
-          { label: '情绪唤醒度', data: [0.68, 0.71], backgroundColor: '#c9a88e' },
-          { label: '可信度', data: [3.15, 6.33], backgroundColor: '#ab977f' }
-        ]
-      }
-    });
-
-    new Chart(document.getElementById('chart4'), {
-      type: 'doughnut',
-      data: {
-        labels: ['情感内核设计', '真实细节', 'AI技术生成', '文化/节日共鸣'],
-        datasets: [{
-          data: [38, 28, 16, 18],
-          backgroundColor: ['#c9a88e', '#ab977f', '#857769', '#6b5e51']
-        }]
-      }
-    });
-  </script>
+    
+    // 初始化所有
+    function init() {
+        bindQuizChoices();
+        bindVote();
+        updateTransform();
+        generateResultReport();
+        // 第一页星光特效
+        document.querySelector('#page1 .big-title')?.classList.add('sparkle');
+        // 页2抖动默认不开启
+    }
+    init();
+</script>
 </body>
 </html>
